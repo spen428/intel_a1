@@ -2,19 +2,19 @@ package intel_a1;
 
 public class Candidate {
 
-    private final Genome genome;
+    private final Genotype genotype;
 
-    public Candidate(Genome genome) {
+    public Candidate(Genotype genotype) {
         super();
-        this.genome = genome;
+        this.genotype = genotype;
     }
 
-    public Genome getGenome() {
-        return this.genome;
+    public Genotype getGenotype() {
+        return this.genotype;
     }
 
     public void mutate() {
-        this.genome.mutate();
+        this.genotype.mutate();
     }
 
     /**
@@ -30,15 +30,21 @@ public class Candidate {
         }
 
         /* Produce a new genome based on both parents */
-        Genome[] newGenomes = this.genome.getCrossovers(spouse.getGenome());
+        Genotype[] newGenomes = this.genotype
+                .getCrossovers(spouse.getGenotype());
 
         /* Create children based on new genome */
         return new Candidate[] { new Candidate(newGenomes[0]),
                 new Candidate(newGenomes[1]) };
     }
 
-    public void solve() {
-
+    public double f(double x) {
+        double ans = 0;
+        double[] params = this.genotype.getParameters();
+        for (int i = 0; i < params.length; i++) {
+            ans += params[i] * Math.pow(x, i);
+        }
+        return ans;
     }
 
 }
