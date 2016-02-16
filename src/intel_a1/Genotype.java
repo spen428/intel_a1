@@ -66,7 +66,7 @@ public class Genotype {
      * Flip one random bit of the genome sequence.
      */
     public void mutate() {
-        int bit = Main.rng.nextInt(this.sequence.length() - 1);
+        int bit = Main.RNG.nextInt(this.sequence.length() - 1);
         char c = this.sequence.charAt(bit);
         if (c == '0') {
             c = '1';

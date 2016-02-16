@@ -4,31 +4,36 @@ import java.util.Random;
 
 public class Main {
 
-    public static final Random rng = new Random();
+    public static final Random RNG = new Random();
+
+    /** Chance of mutation */
+    public static final float MUTATE_RATE = 0.01f;
+
+    public static final int POPULATION_SIZE = 10;
+    public static final int NUM_GENERATIONS = 1;
 
     /** Minimum coeff values */
-    private static final int[] min = new int[] { 0, 0, 0, 0, 0 };
+    private static final int[] MIN = new int[] { 0, 0, 0, 0, 0 };
     /** Maximum coeff values */
-    private static final int[] max = new int[] { 100, 100, 100, 100, 100 };
+    private static final int[] MAX = new int[] { 100, 100, 100, 100, 100 };
 
     public static void main(String[] args) {
-        Candidate c1 = new Candidate(new Genotype(randomGenomeSequence()));
-        Candidate c2 = new Candidate(new Genotype(randomGenomeSequence()));
-        Candidate[] n = c1.breed(c2);
+        Candidate[] candidates = new Candidate[POPULATION_SIZE];
+        for (int i = 0; i < POPULATION_SIZE; i++) {
+            candidates[i] = new Candidate(new Genotype(randomGenomeSequence()));
+        }
 
-        System.out.println(c1.f(0));
-        System.out.println(c2.f(0));
-        System.out.println(n[0].f(0));
-        System.out.println(n[1].f(0));
-
-        c1.mutate();
+        Population pop = new Population(candidates);
+        for (int i = 0; i < NUM_GENERATIONS; i++) {
+            pop.step();
+        }
     }
 
     private static String randomGenomeSequence() {
         /* Randomly generate integers between given min and max values */
-        int[] val = new int[min.length];
+        int[] val = new int[MIN.length];
         for (int i = 0; i < val.length; i++) {
-            val[i] = rng.nextInt((max[i] + 1) - min[i]) + min[i];
+            val[i] = RNG.nextInt((MAX[i] + 1) - MIN[i]) + MIN[i];
         }
 
         /* Convert integers into a long binary string */
