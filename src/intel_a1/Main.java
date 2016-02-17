@@ -6,24 +6,30 @@ public class Main {
 
     public static final Random RNG = new Random();
 
+    /** Minimum coeff values */
+    private static final int[] MIN = new int[] { 0, 0, 0, 0, 0, 0 };
+    /** Maximum coeff values */
+    private static final int[] MAX = new int[] { 100, 100, 100, 100, 100, 100 };
+
+    public static final int POPULATION_SIZE = 24;
+    public static final int NUM_GENERATIONS = 1;
+
     /** Chance of mutation */
     public static final float MUTATE_RATE = 0.01f;
 
-    public static final int POPULATION_SIZE = 10;
-    public static final int NUM_GENERATIONS = 1;
-
-    /** Minimum coeff values */
-    private static final int[] MIN = new int[] { 0, 0, 0, 0, 0 };
-    /** Maximum coeff values */
-    private static final int[] MAX = new int[] { 100, 100, 100, 100, 100 };
+    /** Number of individuals that "survive" and produce offspring */
+    public static final int NUM_SURVIVORS = (int) (POPULATION_SIZE * 0.25f);
+    
+    /** How many of the survivors are elite individuals (top fitness rank) */
+    public static final int NUM_ELITES = (int) (NUM_SURVIVORS * 0.2f);
 
     public static void main(String[] args) {
-        Candidate[] candidates = new Candidate[POPULATION_SIZE];
+        Individual[] individuals = new Individual[POPULATION_SIZE];
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            candidates[i] = new Candidate(new Genotype(randomGenomeSequence()));
+            individuals[i] = new Individual(new Genome(randomGenomeSequence()));
         }
 
-        Population pop = new Population(candidates);
+        Population pop = new Population(individuals);
         for (int i = 0; i < NUM_GENERATIONS; i++) {
             pop.step();
         }
