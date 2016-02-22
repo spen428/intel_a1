@@ -15,17 +15,20 @@ public class Genome {
         for (int i = 0; i < this.coefficients.length; i++) {
             String s = binaryString.substring(i * Integer.SIZE,
                     (i + 1) * Integer.SIZE);
-            System.out.println(s);
-            System.out.println(s.length());
-            this.coefficients[i] = Integer.parseInt(s, 2);
+            this.coefficients[i] = Integer.parseUnsignedInt(s, 2);
         }
+    }
+
+    @Override
+    public Genome clone() {
+        return new Genome(this.toString());
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        for (int i : this.coefficients) {
-            String binaryString = Integer.toBinaryString(i);
+        for (int i = 0; i < this.coefficients.length; i++) {
+            String binaryString = Integer.toBinaryString(this.coefficients[i]);
             /* Pad with leading zeroes where necessary */
             s.append(String.format("%" + Integer.SIZE + "s", binaryString)
                     .replace(' ', '0'));
@@ -67,8 +70,8 @@ public class Genome {
         String newS1 = a1 + b2;
         String newS2 = b1 + a2;
 
-        System.out.printf("P1 : %s|%s%nP2 : %s|%s%n", a1, a2, b1, b2);
-        System.out.printf("C1 : %s|%s%nC2 : %s|%s%n", a1, b2, b1, a2);
+        // System.out.printf("P1 : %s|%s%nP2 : %s|%s%n", a1, a2, b1, b2);
+        // System.out.printf("C1 : %s|%s%nC2 : %s|%s%n", a1, b2, b1, a2);
 
         return new Genome[] { new Genome(newS1), new Genome(newS2) };
     }

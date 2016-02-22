@@ -6,18 +6,18 @@ public class Individual implements Comparable<Individual> {
     public static final double UNKNOWN = Double.MIN_VALUE;
 
     private final long id;
-    private final Genome genotype;
+    private final Genome genome;
     private double fitness;
 
-    public Individual(Genome genotype) {
+    public Individual(Genome genome) {
         super();
-        this.genotype = genotype;
+        this.genome = genome;
         this.fitness = UNKNOWN;
         this.id = counter++;
     }
 
-    public Genome getGenotype() {
-        return this.genotype;
+    public Genome getGenome() {
+        return this.genome;
     }
 
     /**
@@ -34,12 +34,12 @@ public class Individual implements Comparable<Individual> {
     }
 
     public void mutate() {
-        this.genotype.mutate();
+        this.genome.mutate();
     }
 
     @Override
     public Individual clone() {
-        return new Individual(this.genotype);
+        return new Individual(this.genome.clone());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Individual implements Comparable<Individual> {
         }
 
         /* Produce a new genome based on both parents */
-        Genome[] newGenomes = this.genotype.getCrossovers(spouse.getGenotype());
+        Genome[] newGenomes = this.genome.getCrossovers(spouse.getGenome());
 
         /* Create children based on new genome */
         return new Individual[] { new Individual(newGenomes[0]),
@@ -69,7 +69,7 @@ public class Individual implements Comparable<Individual> {
 
     public double f(double x) {
         double ans = 0;
-        int[] params = this.genotype.getParameters();
+        int[] params = this.genome.getParameters();
         for (int i = 0; i < params.length; i++) {
             ans += params[i] * Math.pow(x, i);
         }

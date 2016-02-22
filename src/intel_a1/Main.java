@@ -7,12 +7,13 @@ public class Main {
     public static final Random RNG = new Random();
 
     /** Minimum coeff values */
-    private static final int[] MIN = new int[] { 0, 0, 0, 0, 0, 0 };
+    private static final int[] MIN = new int[] { -100, -100, -100, -100, -100,
+            -100 };
     /** Maximum coeff values */
     private static final int[] MAX = new int[] { 100, 100, 100, 100, 100, 100 };
 
     public static final int POPULATION_SIZE = 24;
-    public static final int NUM_GENERATIONS = 1;
+    public static final int NUM_GENERATIONS = 100;
 
     /** Chance of mutation */
     public static final float MUTATE_RATE = 0.01f;
