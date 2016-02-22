@@ -2,32 +2,42 @@ package intel_a1;
 
 public class Genome {
 
-    private StringBuilder sequence; // Maybe use char[] instead?
+    private final int[] coefficients;
 
-    public Genome(String sequence) {
+    public Genome(int... coefficients) {
         super();
-        this.sequence = new StringBuilder(sequence);
+        this.coefficients = coefficients;
     }
 
-    /**
-     * @return a {@link String} representing the genome sequence
-     */
-    public String getSequence() {
-        return this.sequence.toString();
+    public Genome(String binaryString) {
+        super();
+        this.coefficients = new int[binaryString.length() / Integer.SIZE];
+        for (int i = 0; i < this.coefficients.length; i++) {
+            String s = binaryString.substring(i * Integer.SIZE,
+                    (i + 1) * Integer.SIZE);
+            System.out.println(s);
+            System.out.println(s.length());
+            this.coefficients[i] = Integer.parseInt(s, 2);
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (int i : this.coefficients) {
+            String binaryString = Integer.toBinaryString(i);
+            /* Pad with leading zeroes where necessary */
+            s.append(String.format("%" + Integer.SIZE + "s", binaryString)
+                    .replace(' ', '0'));
+        }
+        return s.toString();
     }
 
     /**
      * @return the parameters encoded by this {@link Genome}
      */
-    public double[] getParameters() {
-        int len = (this.sequence.length() / 32);
-        double[] vals = new double[len];
-        for (int i = 0; i < len; i++) {
-            /* Split string and convert from binary to int */
-            String binary = this.sequence.substring(32 * i, 32 * (i + 1));
-            vals[i] = Integer.valueOf(binary, 2);
-        }
-        return vals;
+    public int[] getParameters() {
+        return this.coefficients;
     }
 
     /**
@@ -42,39 +52,34 @@ public class Genome {
         /* Non-random single-point crossover */
 
         // This genotype
-        int aLen = this.sequence.length();
-        String a1 = this.sequence.substring(0, aLen / 2);
-        String a2 = this.sequence.substring(aLen / 2, aLen);
+        String s1 = this.toString();
+        int aLen = s1.length();
+        String a1 = s1.substring(0, aLen / 2);
+        String a2 = s1.substring(aLen / 2, aLen);
 
         // Spouse genotype
-        int bLen = genome.getSequence().length();
-        String b1 = genome.getSequence().substring(0, bLen / 2);
-        String b2 = genome.getSequence().substring(bLen / 2, bLen);
+        String s2 = genome.toString();
+        int bLen = s2.length();
+        String b1 = s2.substring(0, bLen / 2);
+        String b2 = s2.substring(bLen / 2, bLen);
 
         // Combine
-        String s1 = a1 + b2;
-        String s2 = b1 + a2;
+        String newS1 = a1 + b2;
+        String newS2 = b1 + a2;
 
-        // System.out.printf("P1 : %s|%s%nP2 : %s|%s%n", a1, a2, b1, b2);
-        // System.out.printf("C1 : %s|%s%nC2 : %s|%s%n", a1, b2, b1, a2);
+        System.out.printf("P1 : %s|%s%nP2 : %s|%s%n", a1, a2, b1, b2);
+        System.out.printf("C1 : %s|%s%nC2 : %s|%s%n", a1, b2, b1, a2);
 
-        return new Genome[] { new Genome(s1), new Genome(s2) };
+        return new Genome[] { new Genome(newS1), new Genome(newS2) };
     }
 
     /**
      * Flip one random bit of the genome sequence.
      */
     public void mutate() {
-        int bit = Main.RNG.nextInt(this.sequence.length() - 1);
-        char c = this.sequence.charAt(bit);
-        if (c == '0') {
-            c = '1';
-        } else if (c == '1') {
-            c = '0';
-        } else {
-            throw new IllegalStateException("This should be a binary string!");
-        }
-        this.sequence.setCharAt(bit, c);
+        int bit = Main.RNG.nextInt(Integer.SIZE);
+        int coeff = Main.RNG.nextInt(this.coefficients.length);
+        this.coefficients[coeff] ^= (1 << bit);
     }
 
 }

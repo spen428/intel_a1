@@ -19,7 +19,7 @@ public class Main {
 
     /** Number of individuals that "survive" and produce offspring */
     public static final int NUM_SURVIVORS = (int) (POPULATION_SIZE * 0.25f);
-    
+
     /** How many of the survivors are elite individuals (top fitness rank) */
     public static final int NUM_ELITES = (int) (NUM_SURVIVORS * 0.2f);
 
@@ -35,20 +35,13 @@ public class Main {
         }
     }
 
-    private static String randomGenomeSequence() {
+    private static int[] randomGenomeSequence() {
         /* Randomly generate integers between given min and max values */
-        int[] val = new int[MIN.length];
-        for (int i = 0; i < val.length; i++) {
-            val[i] = RNG.nextInt((MAX[i] + 1) - MIN[i]) + MIN[i];
+        int[] vals = new int[MIN.length];
+        for (int i = 0; i < vals.length; i++) {
+            vals[i] = RNG.nextInt((MAX[i] + 1) - MIN[i]) + MIN[i];
         }
-
-        /* Convert integers into a long binary string */
-        String sequence = "";
-        for (int i = 0; i < val.length; i++) {
-            sequence += String.format("%32s", Integer.toBinaryString(val[i]))
-                    .replace(' ', '0');
-        }
-        return sequence;
+        return vals;
     }
 
 }
