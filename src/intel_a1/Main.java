@@ -6,6 +6,8 @@ public class Main {
 
     public static final Random RNG = new Random();
 
+    public static final double[][] DATAPOINTS = loadDataPoints();
+
     /** Minimum coeff values */
     private static final int[] MIN = new int[] { -100, -100, -100, -100, -100,
             -100 };
@@ -43,6 +45,11 @@ public class Main {
             vals[i] = RNG.nextInt((MAX[i] + 1) - MIN[i]) + MIN[i];
         }
         return vals;
+    }
+
+    private static double[][] loadDataPoints() {
+        // TODO
+        return new double[0][0];
     }
 
 }

@@ -2,8 +2,8 @@ package intel_a1;
 
 public class Individual implements Comparable<Individual> {
 
-    private static long counter = 0;
     public static final double UNKNOWN = Double.MIN_VALUE;
+    private static long counter = 0;
 
     private final long id;
     private final Genome genome;
@@ -35,6 +35,11 @@ public class Individual implements Comparable<Individual> {
 
     public void mutate() {
         this.genome.mutate();
+        changed();
+    }
+
+    private void changed() {
+        this.fitness = UNKNOWN; // Unset memoized fitness value
     }
 
     @Override
