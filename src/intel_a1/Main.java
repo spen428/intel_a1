@@ -32,17 +32,14 @@ public class Main {
     public static final int NUM_ELITES = (int) (NUM_SURVIVORS * 0.2f);
 
     public static void main(String[] args) {
-        //Individual[] individuals = new Individual[POPULATION_SIZE];
-        //for (int i = 0; i < POPULATION_SIZE; i++) {
-        //    individuals[i] = new Individual(new Genome(randomGenomeSequence()));
-        //}
+        Individual[] individuals = new Individual[POPULATION_SIZE];
+        for (int i = 0; i < POPULATION_SIZE; i++) {
+            individuals[i] = new Individual(new Genome(randomGenomeSequence()));
+        }
 
-        //Population pop = new Population(individuals);
-        //for (int i = 0; i < NUM_GENERATIONS; i++) {
-        //    pop.step();
-        //}
-        for (Point p : loadDataPoints()) {
-            System.out.printf("(%f,%f)%n", p.getX(), p.getY());
+        Population pop = new Population(individuals);
+        for (int i = 0; i < NUM_GENERATIONS; i++) {
+            pop.step();
         }
     }
 
