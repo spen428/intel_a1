@@ -14,13 +14,12 @@ public class Main {
     public static final Point[] DATAPOINTS = loadDataPoints();
 
     /** Minimum coeff values */
-    private static final int[] MIN = new int[] { -100, -100, -100, -100, -100,
-            -100 };
+    private static final int[] MIN = new int[] { -10, -10, -10, -10, -10, -10 };
     /** Maximum coeff values */
-    private static final int[] MAX = new int[] { 100, 100, 100, 100, 100, 100 };
+    private static final int[] MAX = new int[] { 10, 10, 10, 10, 10, 10 };
 
-    public static final int POPULATION_SIZE = 24;
-    public static final int NUM_GENERATIONS = 100;
+    public static final int POPULATION_SIZE = 100;
+    public static final int NUM_GENERATIONS = 100000;
 
     /** Chance of mutation */
     public static final float MUTATE_RATE = 0.01f;

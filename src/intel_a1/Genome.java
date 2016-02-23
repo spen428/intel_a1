@@ -81,8 +81,8 @@ public class Genome {
         String b1 = s2.substring(0, crossPoint);
         String b2 = s2.substring(crossPoint, s2.length());
 
-        System.out.printf("P1 : %s|%s%nP2 : %s|%s%n", a1, a2, b1, b2);
-        System.out.printf("C1 : %s|%s%nC2 : %s|%s%n", a1, b2, b1, a2);
+        // System.out.printf("P1 : %s|%s%nP2 : %s|%s%n", a1, a2, b1, b2);
+        // System.out.printf("C1 : %s|%s%nC2 : %s|%s%n", a1, b2, b1, a2);
 
         /* Recombine and return */
         return new Genome[] { new Genome(a1 + b2), new Genome(b1 + a2) };

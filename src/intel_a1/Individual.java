@@ -79,13 +79,14 @@ public class Individual implements Comparable<Individual> {
      */
     public double evaluateFitness() {
         if (this.fitness == UNKNOWN) {
-            double fitness = 0;
+            double total = 0;
             for (Point p : Main.DATAPOINTS) {
                 double target = p.getY();
                 double actual = this.f(p.getX());
                 double sqdiff = Math.pow(target - actual, 2);
-                fitness += sqdiff;
+                total += sqdiff;
             }
+            this.fitness = total;
         }
         return this.fitness;
     }

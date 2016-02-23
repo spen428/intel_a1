@@ -15,7 +15,7 @@ public class Population {
      * Iterate over one generation of this population
      */
     public void step() {
-        System.out.println("\n--- Generation summary ---");
+        // System.out.println("\n--- Generation summary ---");
 
         // Do mutations
         int numMutations = 0;
@@ -26,7 +26,8 @@ public class Population {
             }
         }
 
-        System.out.printf("There were a total of %d mutations%n", numMutations);
+        // System.out.printf("There were a total of %d mutations%n",
+        // numMutations);
 
         // Select fittest individuals
         Individual[] survivors = getSurvivors();
@@ -34,10 +35,10 @@ public class Population {
         // Add survivors to population
         for (int i = 0; i < survivors.length; i++) {
             this.individuals[i] = survivors[i];
-            System.out.printf(
-                    "Indiv #%02d has a fitness of %.20f (id:%010d)%s%n", i + 1,
-                    survivors[i].evaluateFitness(), survivors[i].getId(),
-                    (i < Main.NUM_ELITES) ? " (Elite)" : "");
+            // System.out.printf(
+            // "Indiv #%02d has a fitness of %.20f (id:%010d)%s%n", i + 1,
+            // survivors[i].evaluateFitness(), survivors[i].getId(),
+            // (i < Main.NUM_ELITES) ? " (Elite)" : "");
         }
 
         // Breed and add offspring to population
@@ -54,10 +55,11 @@ public class Population {
                 break;
             }
 
-            System.out.printf("Child #%02d has a fitness of %.20f (id:%010d)%n",
-                    i - survivors.length + 1,
-                    this.individuals[i].evaluateFitness(),
-                    this.individuals[i].getId());
+            // System.out.printf("Child #%02d has a fitness of %.20f
+            // (id:%010d)%n",
+            // i - survivors.length + 1,
+            // this.individuals[i].evaluateFitness(),
+            // this.individuals[i].getId());
 
             if (i + 1 < this.individuals.length) {
                 this.individuals[i + 1] = children[1];
@@ -65,11 +67,18 @@ public class Population {
                 break;
             }
 
-            System.out.printf("Child #%02d has a fitness of %.20f (id:%010d)%n",
-                    i - survivors.length + 2,
-                    this.individuals[i + 1].evaluateFitness(),
-                    this.individuals[i + 1].getId());
+            // System.out.printf("Child #%02d has a fitness of %.20f
+            // (id:%010d)%n",
+            // i - survivors.length + 2,
+            // this.individuals[i + 1].evaluateFitness(),
+            // this.individuals[i + 1].getId());
         }
+
+        double avgFit = 0;
+        for (Individual i : this.individuals) {
+            avgFit += i.evaluateFitness();
+        }
+        System.out.println(avgFit / this.individuals.length);
     }
 
     private Individual[] getSurvivors() {
@@ -85,7 +94,7 @@ public class Population {
 
         // Rest of population competes for survival
         int idx = Main.NUM_ELITES;
-        for (Individual iv : tournament(
+        for (Individual iv : select(
                 Arrays.copyOfRange(this.individuals, Main.NUM_ELITES,
                         this.individuals.length),
                 Main.NUM_SURVIVORS - Main.NUM_ELITES)) {
@@ -95,7 +104,16 @@ public class Population {
         return survivors;
     }
 
-    private static Individual[] tournament(Individual[] pop, int numSurvivors) {
+    /**
+     * Perform selection of next generation based on fitness
+     * 
+     * @param pop
+     *            array of {@link Individual}
+     * @param numSurvivors
+     *            number of {@link Individual} to keep alive
+     * @return array of {@link Individual} that "survivied"
+     */
+    private static Individual[] select(Individual[] pop, int numSurvivors) {
         Individual[] survivors = new Individual[numSurvivors];
         // Randomly select remaining survivors, can select clones
         double totalFitness = 0;
