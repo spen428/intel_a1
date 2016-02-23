@@ -1,12 +1,17 @@
 package intel_a1;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Main {
 
     public static final Random RNG = new Random();
 
-    public static final double[][] DATAPOINTS = loadDataPoints();
+    public static final Point[] DATAPOINTS = loadDataPoints();
 
     /** Minimum coeff values */
     private static final int[] MIN = new int[] { -100, -100, -100, -100, -100,
@@ -27,14 +32,17 @@ public class Main {
     public static final int NUM_ELITES = (int) (NUM_SURVIVORS * 0.2f);
 
     public static void main(String[] args) {
-        Individual[] individuals = new Individual[POPULATION_SIZE];
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            individuals[i] = new Individual(new Genome(randomGenomeSequence()));
-        }
+        //Individual[] individuals = new Individual[POPULATION_SIZE];
+        //for (int i = 0; i < POPULATION_SIZE; i++) {
+        //    individuals[i] = new Individual(new Genome(randomGenomeSequence()));
+        //}
 
-        Population pop = new Population(individuals);
-        for (int i = 0; i < NUM_GENERATIONS; i++) {
-            pop.step();
+        //Population pop = new Population(individuals);
+        //for (int i = 0; i < NUM_GENERATIONS; i++) {
+        //    pop.step();
+        //}
+        for (Point p : loadDataPoints()) {
+            System.out.printf("(%f,%f)%n", p.getX(), p.getY());
         }
     }
 
@@ -47,9 +55,25 @@ public class Main {
         return vals;
     }
 
-    private static double[][] loadDataPoints() {
-        // TODO
-        return new double[0][0];
+    private static Point[] loadDataPoints() {
+        ArrayList<Point> points = new ArrayList<>();
+        File f = new File("datfile.dat");
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] tokens = line.split("\\s+");
+                if (tokens.length != 2) {
+                    continue;
+                } else {
+                    double x = Double.valueOf(tokens[0]);
+                    double y = Double.valueOf(tokens[1]);
+                    points.add(new Point(x, y));
+                }
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return points.toArray(new Point[0]);
     }
 
 }

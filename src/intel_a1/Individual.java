@@ -16,21 +16,12 @@ public class Individual implements Comparable<Individual> {
         this.id = counter++;
     }
 
-    public Genome getGenome() {
-        return this.genome;
+    public long getId() {
+        return this.id;
     }
 
-    /**
-     * Evaluate the fitness of this {@link Individual}, a lower value is better
-     * 
-     * @return the fitness value as a {@link Double}
-     */
-    public double evaluateFitness() {
-        if (this.fitness == UNKNOWN) {
-            // TODO
-            this.fitness = Main.RNG.nextDouble();
-        }
-        return this.fitness;
+    public Genome getGenome() {
+        return this.genome;
     }
 
     public void mutate() {
@@ -81,8 +72,22 @@ public class Individual implements Comparable<Individual> {
         return ans;
     }
 
-    public long getId() {
-        return this.id;
+    /**
+     * Evaluate the fitness of this {@link Individual}, a lower value is better
+     *
+     * @return the fitness value as a {@link Double}
+     */
+    public double evaluateFitness() {
+        if (this.fitness == UNKNOWN) {
+            double fitness = 0;
+            for (Point p : Main.DATAPOINTS) {
+                double target = p.getY();
+                double actual = this.f(p.getX());
+                double sqdiff = Math.pow(target - actual, 2);
+                fitness += sqdiff;
+            }
+        }
+        return this.fitness;
     }
 
 }
