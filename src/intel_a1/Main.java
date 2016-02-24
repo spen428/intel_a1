@@ -14,11 +14,11 @@ public class Main {
     public static final Point[] DATAPOINTS = loadDataPoints();
 
     /** Minimum coeff values */
-    private static final int[] MIN = new int[] { -10, -10, -10, -10, -10, -10 };
+    private static final byte[] MIN = new byte[] { 0, 0, 0, 0, 0, 0 };
     /** Maximum coeff values */
-    private static final int[] MAX = new int[] { 10, 10, 10, 10, 10, 10 };
+    private static final byte[] MAX = new byte[] { 10, 10, 10, 10, 10, 10 };
 
-    public static final int POPULATION_SIZE = 100;
+    public static final int POPULATION_SIZE = 50;
     public static final int NUM_GENERATIONS = 100000;
 
     /** Chance of mutation */
@@ -40,13 +40,19 @@ public class Main {
         for (int i = 0; i < NUM_GENERATIONS; i++) {
             pop.step();
         }
+
+        Individual best = pop.getBestSolution();
+        byte p[] = best.getGenome().getParameters();
+        System.out.println("Best solution:");
+        System.out.printf("%080.1f = %10d %10d %10d %10d %10d %10d%n",
+                best.evaluateFitness(), p[0], p[1], p[2], p[3], p[4], p[5]);
     }
 
-    private static int[] randomGenomeSequence() {
+    private static byte[] randomGenomeSequence() {
         /* Randomly generate integers between given min and max values */
-        int[] vals = new int[MIN.length];
+        byte[] vals = new byte[MIN.length];
         for (int i = 0; i < vals.length; i++) {
-            vals[i] = RNG.nextInt((MAX[i] + 1) - MIN[i]) + MIN[i];
+            vals[i] = (byte) (RNG.nextInt((MAX[i] + 1) - MIN[i]) + MIN[i]);
         }
         return vals;
     }

@@ -65,7 +65,7 @@ public class Individual implements Comparable<Individual> {
 
     public double f(double x) {
         double ans = 0;
-        int[] params = this.genome.getParameters();
+        byte[] params = this.genome.getParameters();
         for (int i = 0; i < params.length; i++) {
             ans += params[i] * Math.pow(x, i);
         }

@@ -77,8 +77,11 @@ public class Population {
         double avgFit = 0;
         for (Individual i : this.individuals) {
             avgFit += i.evaluateFitness();
+            // byte[] p = i.getGenome().getParameters();
+            // System.out.printf("%080.1f = %10d %10d %10d %10d %10d %10d%n",
+            // i.evaluateFitness(), p[0], p[1], p[2], p[3], p[4], p[5]);
         }
-        System.out.println(avgFit / this.individuals.length);
+        // System.out.println(avgFit / this.individuals.length);
     }
 
     private Individual[] getSurvivors() {
@@ -136,6 +139,11 @@ public class Population {
             }
         }
         return survivors;
+    }
+
+    public Individual getBestSolution() {
+        Arrays.sort(this.individuals);
+        return this.individuals[0];
     }
 
 }

@@ -2,10 +2,11 @@ package intel_a1;
 
 public class Genome {
 
-    private final int[] coefficients;
+    private static final int SIZE = Byte.SIZE;
+    private final byte[] coefficients;
     private String toString;
 
-    public Genome(int... coefficients) {
+    public Genome(byte... coefficients) {
         super();
         this.coefficients = coefficients;
     }
@@ -14,15 +15,14 @@ public class Genome {
         super();
         if (binaryString == null) {
             throw new IllegalArgumentException("Binary string cannot be null");
-        } else if (binaryString.length() % Integer.SIZE != 0) {
-            throw new IllegalArgumentException("Binary string length must " +
-                    "be a multiple of " + Integer.SIZE);
+        } else if (binaryString.length() % SIZE != 0) {
+            throw new IllegalArgumentException(
+                    "Binary string length must " + "be a multiple of " + SIZE);
         }
-        this.coefficients = new int[binaryString.length() / Integer.SIZE];
+        this.coefficients = new byte[binaryString.length() / SIZE];
         for (int i = 0; i < this.coefficients.length; i++) {
-            String s = binaryString.substring(i * Integer.SIZE,
-                    (i + 1) * Integer.SIZE);
-            this.coefficients[i] = Integer.parseUnsignedInt(s, 2);
+            String s = binaryString.substring(i * SIZE, (i + 1) * SIZE);
+            this.coefficients[i] = (byte) (int) Integer.valueOf(s, 2);
         }
     }
 
@@ -33,13 +33,17 @@ public class Genome {
 
     @Override
     public String toString() {
+        /*
+         * https://stackoverflow.com/questions/12310017/how-to-convert-a-byte-to
+         * -its-binary-string-representation
+         */
         if (this.toString == null) {
             StringBuilder s = new StringBuilder();
             for (int i = 0; i < this.coefficients.length; i++) {
-                String binaryString = Integer.toBinaryString(this.coefficients[i]);
-                /* Pad with leading zeroes where necessary */
-                s.append(String.format("%" + Integer.SIZE + "s", binaryString)
-                        .replace(' ', '0'));
+                byte b = this.coefficients[i];
+                String binaryString = Integer.toBinaryString((b + 256) % 256);
+                /* Pad with leading zeroes */
+                s.append(String.format("%8s", binaryString).replace(' ', '0'));
             }
             this.toString = s.toString();
         }
@@ -49,7 +53,7 @@ public class Genome {
     /**
      * @return the parameters encoded by this {@link Genome}
      */
-    public int[] getParameters() {
+    public byte[] getParameters() {
         // TODO: Prevent external modification
         return this.coefficients;
     }
@@ -92,7 +96,7 @@ public class Genome {
      * Flip one random bit of the genome sequence.
      */
     public void mutate() {
-        int bit = Main.RNG.nextInt(Integer.SIZE);
+        int bit = Main.RNG.nextInt(SIZE);
         int coeff = Main.RNG.nextInt(this.coefficients.length);
         this.coefficients[coeff] ^= (1 << bit);
         changed();
