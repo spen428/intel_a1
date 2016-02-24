@@ -2,11 +2,33 @@ package intel_a1;
 
 public class Genome {
 
-    private static final int SIZE = Byte.SIZE;
-    private final byte[] coefficients;
+    /**
+     * Number of bits used to encode coefficient values.
+     */
+    public static final int BITS = 10; // Must be <= 30
+    public static final int MAX_UNSIGNED = (int) Math.pow(2, BITS);
+    public static final int BITMASK = MAX_UNSIGNED - 1;
+
+    private final int[] coefficients;
     private String toString;
 
-    public Genome(byte... coefficients) {
+    /**
+     * Instantiate a new {@link Genome} with a random genome sequence
+     * 
+     * @param numParams
+     *            the number of parameters that this {@link Genome} encodes
+     */
+    public Genome(int numParams) {
+        this(randomGenomeSequence(numParams));
+    }
+
+    /**
+     * Instantate a new {@link Genome} that encodes the given coefficients
+     * 
+     * @param coefficients
+     *            array of coefficient values
+     */
+    public Genome(int[] coefficients) {
         super();
         this.coefficients = coefficients;
     }
@@ -15,14 +37,19 @@ public class Genome {
         super();
         if (binaryString == null) {
             throw new IllegalArgumentException("Binary string cannot be null");
-        } else if (binaryString.length() % SIZE != 0) {
+        } else if (binaryString.length() % BITS != 0) {
             throw new IllegalArgumentException(
-                    "Binary string length must " + "be a multiple of " + SIZE);
+                    "Binary string length must be a multiple of " + BITS);
         }
-        this.coefficients = new byte[binaryString.length() / SIZE];
+        this.coefficients = new int[binaryString.length() / BITS];
         for (int i = 0; i < this.coefficients.length; i++) {
-            String s = binaryString.substring(i * SIZE, (i + 1) * SIZE);
-            this.coefficients[i] = (byte) (int) Integer.valueOf(s, 2);
+            String s = binaryString.substring(i * BITS, (i + 1) * BITS);
+            /*
+             * A nice little hack taken from:
+             * https://stackoverflow.com/questions/14012013/java-converting-
+             * negative-binary-back-to-integer
+             */
+            this.coefficients[i] = (int) Long.parseLong(s, 2);
         }
     }
 
@@ -40,10 +67,12 @@ public class Genome {
         if (this.toString == null) {
             StringBuilder s = new StringBuilder();
             for (int i = 0; i < this.coefficients.length; i++) {
-                byte b = this.coefficients[i];
-                String binaryString = Integer.toBinaryString((b + 256) % 256);
+                int val = this.coefficients[i];
+                String binaryString = Integer
+                        .toBinaryString((val + MAX_UNSIGNED) % MAX_UNSIGNED);
                 /* Pad with leading zeroes */
-                s.append(String.format("%8s", binaryString).replace(' ', '0'));
+                s.append(String.format("%" + BITS + "s", binaryString)
+                        .replace(' ', '0'));
             }
             this.toString = s.toString();
         }
@@ -53,7 +82,7 @@ public class Genome {
     /**
      * @return the parameters encoded by this {@link Genome}
      */
-    public byte[] getParameters() {
+    public int[] getParameters() {
         // TODO: Prevent external modification
         return this.coefficients;
     }
@@ -96,7 +125,7 @@ public class Genome {
      * Flip one random bit of the genome sequence.
      */
     public void mutate() {
-        int bit = Main.RNG.nextInt(SIZE);
+        int bit = Main.RNG.nextInt(BITS);
         int coeff = Main.RNG.nextInt(this.coefficients.length);
         this.coefficients[coeff] ^= (1 << bit);
         changed();
@@ -104,6 +133,15 @@ public class Genome {
 
     private void changed() {
         this.toString = null; // Unset memoized toString() value
+    }
+
+    private static int[] randomGenomeSequence(int numParams) {
+        /* Randomly generate integers between given min and max values */
+        int[] vals = new int[numParams];
+        for (int i = 0; i < vals.length; i++) {
+            vals[i] = Main.RNG.nextInt(MAX_UNSIGNED);
+        }
+        return vals;
     }
 
 }

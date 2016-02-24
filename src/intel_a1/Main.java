@@ -7,33 +7,59 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Main {
+public class Main implements Runnable {
 
-    public static final Random RNG = new Random();
+    /**
+     * Seed for the random number generator, stored so that simulations can be
+     * repeated
+     */
+    public static final long RANDOM_SEED = System.nanoTime();
 
+    /**
+     * Single instance of random number generator
+     */
+    public static final Random RNG = new Random(RANDOM_SEED);
+
+    /**
+     * Data points from the curve we are trying to fit
+     */
     public static final Point[] DATAPOINTS = loadDataPoints();
 
-    /** Minimum coeff values */
-    private static final byte[] MIN = new byte[] { 0, 0, 0, 0, 0, 0 };
-    /** Maximum coeff values */
-    private static final byte[] MAX = new byte[] { 10, 10, 10, 10, 10, 10 };
-
+    /**
+     * Number of {@link Individual} to keep alive in each iteration
+     */
     public static final int POPULATION_SIZE = 50;
+
+    /**
+     * Number of iterations of the algorithm to perform
+     */
     public static final int NUM_GENERATIONS = 100000;
 
-    /** Chance of mutation */
+    /**
+     * Chance of mutation for each {@link Individual} per iteration
+     */
     public static final float MUTATE_RATE = 0.01f;
 
-    /** Number of individuals that "survive" and produce offspring */
+    /**
+     * Number of individuals that "survive" and produce offspring
+     */
     public static final int NUM_SURVIVORS = (int) (POPULATION_SIZE * 0.25f);
 
-    /** How many of the survivors are elite individuals (top fitness rank) */
+    /**
+     * How many of the survivors are elite individuals (top fitness rank)
+     */
     public static final int NUM_ELITES = (int) (NUM_SURVIVORS * 0.2f);
 
-    public static void main(String[] args) {
+    /**
+     * Number of coefficients (the degree of the polynomial + 1)
+     */
+    public static final int NUM_PARAMS = 6;
+
+    @Override
+    public void run() {
         Individual[] individuals = new Individual[POPULATION_SIZE];
         for (int i = 0; i < POPULATION_SIZE; i++) {
-            individuals[i] = new Individual(new Genome(randomGenomeSequence()));
+            individuals[i] = new Individual(new Genome(NUM_PARAMS));
         }
 
         Population pop = new Population(individuals);
@@ -42,19 +68,16 @@ public class Main {
         }
 
         Individual best = pop.getBestSolution();
-        byte p[] = best.getGenome().getParameters();
-        System.out.println("Best solution:");
-        System.out.printf("%080.1f = %10d %10d %10d %10d %10d %10d%n",
-                best.evaluateFitness(), p[0], p[1], p[2], p[3], p[4], p[5]);
+        int[] p = best.getGenome().getParameters();
+        System.out.printf("Best solution after %d generations"
+                + " with a population size of %d:%n"
+                + "%.1f = %8d %8d %8d %8d %8d %8d%n" + "Random seed was: %d%n",
+                NUM_GENERATIONS, POPULATION_SIZE, best.evaluateFitness(), p[0],
+                p[1], p[2], p[3], p[4], p[5], RANDOM_SEED);
     }
 
-    private static byte[] randomGenomeSequence() {
-        /* Randomly generate integers between given min and max values */
-        byte[] vals = new byte[MIN.length];
-        for (int i = 0; i < vals.length; i++) {
-            vals[i] = (byte) (RNG.nextInt((MAX[i] + 1) - MIN[i]) + MIN[i]);
-        }
-        return vals;
+    public static void main(String[] args) {
+        new Main().run();
     }
 
     private static Point[] loadDataPoints() {
