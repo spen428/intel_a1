@@ -44,12 +44,7 @@ public class Genome {
         this.coefficients = new int[binaryString.length() / BITS];
         for (int i = 0; i < this.coefficients.length; i++) {
             String s = binaryString.substring(i * BITS, (i + 1) * BITS);
-            /*
-             * A nice little hack taken from:
-             * https://stackoverflow.com/questions/14012013/java-converting-
-             * negative-binary-back-to-integer
-             */
-            this.coefficients[i] = (int) Long.parseLong(s, 2);
+            this.coefficients[i] = Integer.parseUnsignedInt(s, 2);
         }
     }
 

@@ -33,12 +33,12 @@ public class Main implements Runnable {
     /**
      * Number of iterations of the algorithm to perform
      */
-    public static final int NUM_GENERATIONS = 1000000;
+    public static final int NUM_GENERATIONS = 10000;
 
     /**
      * Chance of mutation for each {@link Individual} per iteration
      */
-    public static final float MUTATE_RATE = 0.05f;
+    public static final float MUTATE_RATE = 0.01f;
 
     /**
      * Number of individuals that "survive" and produce offspring
