@@ -5,9 +5,9 @@ public class Genome {
     /**
      * Number of bits used to encode coefficient values.
      */
-    public static final int BITS = 10; // Must be <= 30
+    public static final int BITS = 16; // Must be <= 30
     public static final int MAX_UNSIGNED = (int) Math.pow(2, BITS);
-    public static final int BITMASK = MAX_UNSIGNED - 1;
+    public static final boolean HIGHER_FITNESS_IS_BETTER = false;
 
     private final int[] coefficients;
     private String toString;

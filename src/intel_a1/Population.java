@@ -90,6 +90,11 @@ public class Population {
         // Order by fitness, this automatically calls Individual.evaluate()
         Arrays.sort(this.individuals);
 
+        // System.out.println("Individuals:");
+        // for (Individual i : this.individuals) {
+        // System.out.println(i.evaluateFitness());
+        // }
+
         // Add elites
         for (int i = 0; i < Main.NUM_ELITES; i++) {
             survivors[i] = this.individuals[i];
@@ -103,6 +108,11 @@ public class Population {
                 Main.NUM_SURVIVORS - Main.NUM_ELITES)) {
             survivors[idx++] = iv;
         }
+
+        // System.out.println("Survivors:");
+        // for (Individual i : survivors) {
+        // System.out.println(i.evaluateFitness());
+        // }
 
         return survivors;
     }
@@ -121,19 +131,26 @@ public class Population {
         // Randomly select remaining survivors, can select clones
         double totalFitness = 0;
         for (int i = 0; i < pop.length; i++) {
-            totalFitness += pop[i].evaluateFitness();
+            if (Genome.HIGHER_FITNESS_IS_BETTER) {
+                totalFitness += pop[i].evaluateFitness();
+            } else {
+                totalFitness += 1.0d / pop[i].evaluateFitness();
+            }
         }
 
-        for (int i = 0; i < survivors.length; i++) {
+        for (int x = 0; x < survivors.length; x++) {
             // A binary search would be faster, but oh well
-            double roll = Main.RNG.nextDouble() * totalFitness;
-            double prevFitness = 0;
-            for (int j = 0; j < pop.length; j++) {
-                double cumulativeFitness = prevFitness
-                        + pop[j].evaluateFitness();
-                prevFitness += cumulativeFitness;
-                if (cumulativeFitness >= roll) {
-                    survivors[i] = pop[j];
+            double roll = Main.RNG.nextDouble();
+            double cumulative = 0;
+            for (int i = 0; i < pop.length; i++) {
+                if (Genome.HIGHER_FITNESS_IS_BETTER) {
+                    cumulative += pop[i].evaluateFitness();
+                } else {
+                    cumulative += 1.0d / pop[i].evaluateFitness();
+                }
+                double normalised = cumulative / totalFitness;
+                if (roll <= normalised) {
+                    survivors[x] = pop[i];
                     break;
                 }
             }
