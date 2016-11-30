@@ -5,7 +5,7 @@ public class Genome {
     /**
      * Number of bits used to encode coefficient values.
      */
-    public static final int BITS = 16; // Must be <= 30
+    public static final int BITS = 28; // Must be <= 30
     public static final int MAX_UNSIGNED = (int) Math.pow(2, BITS);
     public static final boolean HIGHER_FITNESS_IS_BETTER = false;
 
@@ -66,8 +66,8 @@ public class Genome {
                 String binaryString = Integer
                         .toBinaryString((val + MAX_UNSIGNED) % MAX_UNSIGNED);
                 /* Pad with leading zeroes */
-                s.append(String.format("%" + BITS + "s", binaryString)
-                        .replace(' ', '0'));
+                s.append(String.format("%" + BITS + "s", binaryString).replace(
+                        ' ', '0'));
             }
             this.toString = s.toString();
         }

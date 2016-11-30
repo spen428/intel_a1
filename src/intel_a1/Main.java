@@ -33,7 +33,7 @@ public class Main implements Runnable {
     /**
      * Number of iterations of the algorithm to perform
      */
-    public static final int NUM_GENERATIONS = 10000;
+    public static final int NUM_GENERATIONS = 20000;
 
     /**
      * Chance of mutation for each {@link Individual} per iteration
@@ -69,11 +69,14 @@ public class Main implements Runnable {
 
         Individual best = pop.getBestSolution();
         int[] p = best.getGenome().getParameters();
-        System.out.printf("Best solution after %d generations"
-                + " with a population size of %d:%n"
-                + "%.1f = %8d %8d %8d %8d %8d %8d%n" + "Random seed was: %d%n",
-                NUM_GENERATIONS, POPULATION_SIZE, best.evaluateFitness(), p[0],
-                p[1], p[2], p[3], p[4], p[5], RANDOM_SEED);
+        // System.out.printf("Best solution after %d generations"
+        // + " with a population size of %d:%n"
+        // + "%.1f = %8d %8d %8d %8d %8d %8d%n" + "Random seed was: %d%n",
+        // NUM_GENERATIONS, POPULATION_SIZE, best.evaluateFitness(), p[0],
+        // p[1], p[2], p[3], p[4], p[5], RANDOM_SEED);
+        for (Point pnt : DATAPOINTS) {
+            System.out.printf("%f %f%n", pnt.getX(), best.f(pnt.getX()));
+        }
     }
 
     public static void main(String[] args) {

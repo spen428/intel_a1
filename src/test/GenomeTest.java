@@ -47,8 +47,8 @@ public class GenomeTest {
         assertEquals(expectedGenomeLength, toString.length());
 
         for (int i = 0; i < testParams.length; i++) {
-            String substring = toString.substring(i * Genome.BITS,
-                    (i + 1) * Genome.BITS);
+            String substring = toString.substring(i * Genome.BITS, (i + 1)
+                    * Genome.BITS);
             assertEquals(testStrings[i], substring);
         }
     }
@@ -81,7 +81,44 @@ public class GenomeTest {
 
     @Test
     public final void testGetCrossovers() {
-        // TODO
+        int[] parity = new int[6];
+        Genome p1 = new Genome(Main.NUM_PARAMS);
+        Genome p2 = new Genome(Main.NUM_PARAMS);
+        Genome[] c1 = p1.getCrossovers(p2);
+        Genome[] c2 = p2.getCrossovers(p1);
+
+        for (char c : p1.toString().toCharArray()) {
+            if (c == '1') {
+                parity[0]++;
+            }
+        }
+
+        for (char c : p2.toString().toCharArray()) {
+            if (c == '1') {
+                parity[1]++;
+            }
+        }
+
+        for (int i = 0; i < 2; i++) {
+            Genome g = c1[i];
+            for (char c : g.toString().toCharArray()) {
+                if (c == '1') {
+                    parity[2 + i]++;
+                }
+            }
+        }
+
+        for (int i = 0; i < 2; i++) {
+            Genome g = c2[i];
+            for (char c : g.toString().toCharArray()) {
+                if (c == '1') {
+                    parity[4 + i]++;
+                }
+            }
+        }
+
+        int parentParity = parity[0] + parity[1];
+
     }
 
 }
